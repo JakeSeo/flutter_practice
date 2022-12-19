@@ -1,3 +1,4 @@
+import 'package:bloc_practice/ui/common.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,7 +24,8 @@ class LoginScreen extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding:
+              const EdgeInsets.symmetric(horizontal: Common.defaultPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
