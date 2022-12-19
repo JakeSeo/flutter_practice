@@ -1,20 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
+  static GoRoute route = GoRoute(
+    path: '/login',
+    builder: (context, state) => const LoginScreen(),
+  );
+
   const LoginScreen({Key? key}) : super(key: key);
 
   void _onLogin() {
     print('_onLogin');
-  }
-
-  void _onSignup() {
-    print('_onSignup');
-  }
-
-  void _onForgotPassword() {
-    print('_onForgotPassword');
   }
 
   @override
@@ -58,7 +54,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 8),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: _onForgotPassword,
+                onTap: () => context.push('/forgot_password'),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -78,12 +74,13 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: _onSignup,
+                      onPressed: () => context.push('/signup'),
                       child: const Text("Signup"),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 0),
             ],
           ),
         ),

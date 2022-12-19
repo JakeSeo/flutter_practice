@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatefulWidget {
+  static GoRoute route = GoRoute(
+    path: '/',
+    builder: (context, state) => const MainScreen(),
+  );
   const MainScreen({Key? key}) : super(key: key);
 
   @override
