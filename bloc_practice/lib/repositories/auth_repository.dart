@@ -4,17 +4,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthRepository {
   final _firebaseAuth = FirebaseAuth.instance;
 
+  Future<bool> isLoggedIn() async {
+    if (_firebaseAuth.currentUser != null) {
+      return true;
+    }
+    return false;
+  }
+
   Future<void> login({required String email, required String password}) async {
     try {
+      print("login: $email $password");
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
+      print("login successful!");
     } on FirebaseAuthException catch (e) {
+      print("login FirebaseAuthException $e!");
       if (e.code == 'user-not-found') {
         throw Exception('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         throw Exception('Wrong password provided for that user.');
       }
     } catch (e) {
+      print("login Exception!!");
       throw Exception(e.toString());
     }
   }
@@ -38,10 +49,12 @@ class AuthRepository {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
+      print("sendResetPasswordEmail FirebaseAuthException $e!");
       if (e.code == 'user-not-found') {
         throw Exception('No user found for that email.');
       }
     } catch (e) {
+      print("sendResetPasswordEmail Exception $e!");
       throw Exception(e.toString());
     }
   }

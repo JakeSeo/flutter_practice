@@ -1,15 +1,24 @@
-import 'package:bloc_practice/ui/common.dart';
+import 'package:bloc_practice/blocs/auth/auth_bloc.dart';
+import 'package:bloc_practice/ui/common/common.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   static GoRoute route = GoRoute(
     path: '/forgot_password',
-    builder: (context, state) => const ForgotPasswordScreen(),
+    builder: (context, state) => ForgotPasswordScreen(),
   );
-  const ForgotPasswordScreen({super.key});
+  ForgotPasswordScreen({super.key});
 
-  void _onSendResetPasswordEmail() {}
+  final _emailTextController = TextEditingController();
+
+  void _onSendResetPasswordEmail(BuildContext context) {
+    print('_onSendResetPasswordEmail');
+    BlocProvider.of<AuthBloc>(context).add(
+      SendResetPasswordEmailRequested(_emailTextController.text),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +35,9 @@ class ForgotPasswordScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: _emailTextController,
+                decoration: const InputDecoration(
                   hintText: 'Enter email',
                 ),
               ),
@@ -36,7 +46,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: _onSendResetPasswordEmail,
+                      onPressed: () => _onSendResetPasswordEmail(context),
                       child: const Text("Send Reset Password Email"),
                     ),
                   ),

@@ -1,17 +1,26 @@
-import 'package:bloc_practice/ui/common.dart';
+import 'package:bloc_practice/blocs/auth/auth_bloc.dart';
+import 'package:bloc_practice/ui/common/common.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   static GoRoute route = GoRoute(
     path: '/login',
-    builder: (context, state) => const LoginScreen(),
+    builder: (context, state) => LoginScreen(),
   );
 
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
-  void _onLogin() {
+  final _formKey = GlobalKey<FormState>();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+
+  void _onLogin(BuildContext context) {
     print('_onLogin');
+    BlocProvider.of<AuthBloc>(context).add(
+      LoginRequested(_emailTextController.text, _passwordTextController.text),
+    );
   }
 
   @override
@@ -26,64 +35,68 @@ class LoginScreen extends StatelessWidget {
         body: Padding(
           padding:
               const EdgeInsets.symmetric(horizontal: Common.defaultPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Enter email',
-                ),
-              ),
-              const SizedBox(height: 8),
-              const TextField(
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Enter password',
-                ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _onLogin,
-                      child: const Text("Login"),
-                    ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _emailTextController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter email',
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => context.push('/forgot_password'),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _passwordTextController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter password',
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
                   children: [
-                    Text(
-                      "Forgot password?",
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.3),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _onLogin(context),
+                        child: const Text("Login"),
                       ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Divider(),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => context.push('/signup'),
-                      child: const Text("Signup"),
-                    ),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => context.push('/forgot_password'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Forgot password?",
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.3),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 0),
-            ],
+                ),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => context.push('/signup'),
+                        child: const Text("Signup"),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 0),
+              ],
+            ),
           ),
         ),
       ),

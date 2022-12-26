@@ -29,3 +29,5 @@ class SendResetPasswordEmailRequested extends AuthEvent {
 
 // When the user signing out this event is called and the [AuthRepository] is called to sign out the user
 class SignoutRequested extends AuthEvent {}
+
+class AutoLoginRequested extends AuthEvent {}

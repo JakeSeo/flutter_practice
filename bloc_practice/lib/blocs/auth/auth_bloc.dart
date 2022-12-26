@@ -9,6 +9,15 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(UnAuthenticated()) {
+    on<AutoLoginRequested>((event, emit) async {
+      emit(Loading());
+      await Future.delayed(const Duration(seconds: 3));
+      if (await authRepository.isLoggedIn()) {
+        emit(Authenticated());
+      } else {
+        emit(UnAuthenticated());
+      }
+    });
     // When User Presses the SignIn Button, we will send the SignInRequested Event to the AuthBloc to handle it and emit the Authenticated State if the user is authenticated
     on<LoginRequested>((event, emit) async {
       emit(Loading());
@@ -41,7 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(ResetPasswordEmailSent());
       } catch (e) {
         emit(AuthError(e.toString()));
-        emit(UnAuthenticated());
       }
     });
     // When User Presses the SignOut Button, we will send the SignOutRequested Event to the AuthBloc to handle it and emit the UnAuthenticated State

@@ -1,4 +1,6 @@
+import 'package:bloc_practice/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,10 +16,14 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    BlocProvider.of<AuthBloc>(context).add(
+      AutoLoginRequested(),
+    );
   }
 
   @override
@@ -30,14 +36,26 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             const Center(
               child: Text("home"),
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  context.push('/login');
-                },
-                child: const Text("Login"),
-              ),
-            )
+            BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+              if (state is Loading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (state is UnAuthenticated || state is ResetPasswordEmailSent) {
+                return Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.push('/login');
+                    },
+                    child: const Text("Login"),
+                  ),
+                );
+              }
+
+              return const Center(child: Text("Profile"));
+            })
           ],
         ),
         bottomNavigationBar: TabBar(
