@@ -26,6 +26,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 
+  _logout() {
+    BlocProvider.of<AuthBloc>(context).add(
+      SignoutRequested(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,7 +60,16 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 );
               }
 
-              return const Center(child: Text("Profile"));
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Profile"),
+                  ElevatedButton(
+                    onPressed: _logout,
+                    child: const Text("Logout"),
+                  )
+                ],
+              );
             })
           ],
         ),
