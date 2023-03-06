@@ -12,10 +12,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AutoLoginRequested>((event, emit) async {
       emit(Loading());
       await Future.delayed(const Duration(seconds: 3));
-      if (await authRepository.isLoggedIn()) {
-        emit(Authenticated());
+      if (authRepository.isLoggedIn()) {
+        if (await authRepository.isEmailVerified()) {
+          emit(Authenticated());
+        } else {
+          emit(EmailNotVerified());
+        }
       } else {
         emit(UnAuthenticated());
+      }
+    });
+    on<SendVerificationEmailRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        await authRepository.sendEmailVerificationEmail();
+        emit(EmailNotVerified());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(UnAuthenticated());
+      }
+    });
+    on<CheckEmailVerificationRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        if (await authRepository.isEmailVerified()) {
+          emit(Authenticated());
+        } else {
+          emit(AuthError('Email not verified yet!'));
+          emit(EmailNotVerified());
+        }
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(EmailNotVerified());
       }
     });
     // When User Presses the SignIn Button, we will send the SignInRequested Event to the AuthBloc to handle it and emit the Authenticated State if the user is authenticated
@@ -24,7 +52,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await authRepository.login(
             email: event.email, password: event.password);
-        emit(Authenticated());
+        if (await authRepository.isEmailVerified()) {
+          print('email verified');
+          emit(Authenticated());
+        } else {
+          emit(EmailNotVerified());
+        }
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(UnAuthenticated());
@@ -36,7 +69,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await authRepository.signup(
             email: event.email, password: event.password);
-        emit(Authenticated());
+        emit(EmailNotVerified());
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(UnAuthenticated());

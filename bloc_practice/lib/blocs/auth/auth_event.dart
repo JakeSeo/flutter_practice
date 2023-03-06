@@ -13,6 +13,14 @@ class LoginRequested extends AuthEvent {
   LoginRequested(this.email, this.password);
 }
 
+class SendVerificationEmailRequested extends AuthEvent {
+  SendVerificationEmailRequested();
+}
+
+class CheckEmailVerificationRequested extends AuthEvent {
+  CheckEmailVerificationRequested();
+}
+
 // When the user signing up with email and password this event is called and the [AuthRepository] is called to sign up the user
 class SignupRequested extends AuthEvent {
   final String email;

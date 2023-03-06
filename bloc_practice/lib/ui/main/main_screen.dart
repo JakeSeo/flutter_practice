@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatefulWidget {
   static GoRoute route = GoRoute(
+    name: 'home',
     path: '/',
     builder: (context, state) => const MainScreen(),
   );
@@ -23,6 +24,16 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     _tabController = TabController(length: 2, vsync: this);
     BlocProvider.of<AuthBloc>(context).add(
       AutoLoginRequested(),
+    );
+  }
+
+  _verifyEmail() {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    context.pushNamed('email_verification', queryParams: {
+      'email': authBloc.authRepository.getCurrentUser()?.email ?? ''
+    });
+    BlocProvider.of<AuthBloc>(context).add(
+      SendVerificationEmailRequested(),
     );
   }
 
@@ -57,6 +68,23 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     },
                     child: const Text("Login"),
                   ),
+                );
+              }
+
+              if (state is EmailNotVerified) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Email Not Verified"),
+                    ElevatedButton(
+                      onPressed: _verifyEmail,
+                      child: const Text("Verify Email"),
+                    ),
+                    ElevatedButton(
+                      onPressed: _logout,
+                      child: const Text("Logout"),
+                    )
+                  ],
                 );
               }
 

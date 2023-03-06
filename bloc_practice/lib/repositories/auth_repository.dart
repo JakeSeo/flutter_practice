@@ -4,7 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthRepository {
   final _firebaseAuth = FirebaseAuth.instance;
 
-  Future<bool> isLoggedIn() async {
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
+  }
+
+  Future<bool> isEmailVerified() async {
+    await _firebaseAuth.currentUser?.reload();
+    return _firebaseAuth.currentUser?.emailVerified ?? false;
+  }
+
+  bool isLoggedIn() {
     if (_firebaseAuth.currentUser != null) {
       return true;
     }
@@ -32,15 +41,30 @@ class AuthRepository {
 
   Future<void> signup({required String email, required String password}) async {
     try {
+      print('signup: $email $password');
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
+      print('firebaseauthException: ${e.message}');
       if (e.code == 'weak-password') {
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         throw Exception('The account already exists for that email.');
       }
     } catch (e) {
+      print('Exception: $e');
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> sendEmailVerificationEmail() async {
+    try {
+      await _firebaseAuth.currentUser!.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      print("sendEmailVerificationEmail FirebaseAuthException $e!");
+      throw Exception(e.toString());
+    } catch (e) {
+      print("sendEmailVerificationEmail Exception $e!");
       throw Exception(e.toString());
     }
   }

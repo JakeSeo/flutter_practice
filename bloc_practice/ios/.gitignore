@@ -32,3 +32,7 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# 파이어베이스 관련 파일
+firebase_app_id_file.json
+Runner/GoogleService-Info.plist
