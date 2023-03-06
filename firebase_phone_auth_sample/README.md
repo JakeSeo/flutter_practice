@@ -1,16 +1,24 @@
-# firebase_phone_auth_sample
+# Firebase Phone and Email Auth Sample
+상태관리 라이브러리로는 Provider 사용
 
-A new Flutter project.
+#### 셋업
+~~~
+flutter pub get
+~~~
 
-## Getting Started
+#### 파이어베이스 셋업 
+참조: https://firebase.google.com/docs/flutter/setup?platform=android
 
-This project is a starting point for a Flutter application.
+~~~
+% firebase login
+% flutterfire config
+~~~
 
-A few resources to get you started if this is your first Flutter project:
+파이어베이스 프로젝트 생성후 안드로이드앱에 디버그SHA1 키 값 추가 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 안드로이드 디버그키 구하는법
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+~~~
+% cd android
+% /.gradlew signingReport
+~~~
