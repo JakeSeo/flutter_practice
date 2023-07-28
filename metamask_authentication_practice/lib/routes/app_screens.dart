@@ -19,7 +19,7 @@ class AppScreens {
     ),
     GetPage(
       name: Routes.login,
-      page: () => const LoginScreen(),
+      page: () => LoginScreen(),
     ),
   ];
 }

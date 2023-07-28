@@ -47,7 +47,7 @@ android {
         applicationId "com.example.metamask_authentication_practice"
         
         
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 18 //flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
